@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ExoPlayer</string>
+    <string name="video_url">https://www.radiantmediaplayer.com/media/bbb-360p.mp4</string>
+</resources>
