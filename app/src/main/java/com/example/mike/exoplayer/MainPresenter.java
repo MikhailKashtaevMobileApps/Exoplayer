@@ -14,6 +14,8 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
 public class MainPresenter {
 
+    public static final String TAG = "__TAG__";
+
     private static MainPresenter instance;
     private Context context;
     private SimpleExoPlayer player;
@@ -30,13 +32,9 @@ public class MainPresenter {
         this.context = context;
     }
 
-    public SimpleExoPlayer getPlayer(){
-        // If player exists already, return player
-        if ( this.player != null ){
-            return player;
-        }
-
-        // If not then create new one
+    public void initPlayer(){
+        Log.d(TAG, "initPlayer: pos="+position);
+        System.out.println(TAG+" initPlayer, pos="+position);
         player = ExoPlayerFactory.newSimpleInstance(
                 context,
                 new DefaultRenderersFactory(context),
@@ -44,15 +42,27 @@ public class MainPresenter {
                 new DefaultLoadControl()
         );
 
-        player.setPlayWhenReady(false);
-        player.seekTo(0, position);
+        player.setPlayWhenReady(true);
 
         player.prepare( new ExtractorMediaSource.Factory(
                         new DefaultHttpDataSourceFactory(context.getString( R.string.app_name ))
                 )
                         .createMediaSource(Uri.parse( context.getString( R.string.video_url )))
         );
+        player.seekTo(0, position);
+    }
+
+    public SimpleExoPlayer getPlayer(){
+        // If not then create new one
         return player;
+    }
+
+    public void releasePlayer(){
+        Log.d(TAG, "releasePlayer: ");
+        System.out.println(TAG+" releasePlayer");
+        position = player.getCurrentPosition();
+        player.release();
+        player = null;
     }
 
 }
